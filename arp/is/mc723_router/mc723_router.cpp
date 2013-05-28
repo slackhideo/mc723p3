@@ -1,11 +1,10 @@
 /**
  * @file      mc723_router.cpp
- * @author    Grupo 45 - MC723 1s2013
+ * @author    Grupo 45 - MC723 - 1s2013
  *
- * @version   0.1
- * @date      Sun, 02 Apr 2006 08:07:46 -0200
+ * @version   0.2
  *
- * @brief     Implements a ac_tlm memory.
+ * @brief     Implements a ac_tlm router.
  *
  * @attention Copyright (C) 2002-2005 --- The ArchC Team
  *

@@ -20,54 +20,32 @@ using tlm::tlm_transport_if;
 
 //////////////////////////////////////////////////////////////////////////////
 
-//#define DEBUG
-
 namespace user
 {
 
-/// A TLM router
-    class mc723_router :
+// A TLM router!
+  class mc723_router :
   public sc_module,
-  public ac_tlm_transport_if // Using ArchC TLM protocol
+  public ac_tlm_transport_if
 {
 public:
   
-  /// Exposed port with ArchC interface
+    // Exposed port with ArchC interface
   sc_export< ac_tlm_transport_if > target_export;
-
   ac_tlm_port DM_port;
-  
-  /**
-   * Implementation of TLM transport method that
-   * handle packets of the protocol doing apropriate actions.
-   * This method must be implemented (required by SystemC TLM).
-   * @param request is a received request packet
-   * @return A response packet to be send
-  */
-  
-  ac_tlm_rsp transport( const ac_tlm_req &request ) {
 
-      //ac_tlm_rsp response;
-
-
-    return DM_port->transport(request);
-  }
-
-
-  /**
-   * Default constructor.
-   *
-   * @param k Memory size in kilowords.
-   *
-   */
+    // Constructor
   mc723_router ( sc_module_name module_name , int k = 5242880 );
 
-  /**
-   * Default destructor.
-   */
+    // Destructor
   ~mc723_router();
+    
+  ac_tlm_rsp transport( const ac_tlm_req &request ) {
+    // ac_tlm_rsp response
+    return DM_port->transport(request);
+  }
 };
 
 };
 
-#endif //AC_TLM_MEM_H_
+#endif
