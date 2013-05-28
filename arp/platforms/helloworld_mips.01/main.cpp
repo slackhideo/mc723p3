@@ -23,9 +23,11 @@ const char *archc_options="-abi -dy ";
 #include  "mips1.H"
 #include  "ac_tlm_mem.h"
 #include  "mc723_router.h"
+#include  "mc723_locker.h"
 
 using user::ac_tlm_mem;
 using user::mc723_router;
+using user::mc723_locker;
 
 int sc_main(int ac, char *av[])
 {
@@ -34,6 +36,7 @@ int sc_main(int ac, char *av[])
   mips1 mips1_proc1("mips1");
   ac_tlm_mem mem("mem");
   mc723_router router("router");
+  mc723_locker locker("locker");
 
 #ifdef AC_DEBUG
   ac_trace("mips1_proc1.trace");
