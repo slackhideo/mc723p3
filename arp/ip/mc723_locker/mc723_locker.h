@@ -76,15 +76,14 @@ public:
     ac_tlm_rsp response;
 
     switch( request.type ) {
-    case LOCK: 
+    case READ: 
+      response.status = SUCCESS;
+      response.data = mutex;
       mutex = 1;
-      response.status = SUCCESS;
-      response.data = mutex;
       break;
-    case UNLOCK:
-      mutex = 0;
+    case WRITE:
       response.status = SUCCESS;
-      response.data = mutex;
+      mutex = request.data;
       break;
     default :
       response.status = ERROR;
