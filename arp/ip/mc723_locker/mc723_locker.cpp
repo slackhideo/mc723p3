@@ -1,16 +1,8 @@
 /**
  * @file      mc723_locker.cpp
- * @author    Bruno de Carvalho Albertini
- *
- * @author    The ArchC Team
- *            http://www.archc.org/
- *
- *            Computer Systems Laboratory (LSC)
- *            IC-UNICAMP
- *            http://www.lsc.ic.unicamp.br/
+ * @author    Grupo 45 - MC723 - 1s2013
  *
  * @version   0.1
- * @date      Sun, 02 Apr 2006 08:07:46 -0200
  *
  * @brief     Implements a ac_tlm memory.
  *
@@ -38,7 +30,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-/// Namespace to isolate memory from ArchC
+/// Namespace to isolate locker from ArchC
 using user::mc723_locker;
 
 /// Constructor

@@ -30,13 +30,14 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
+/// Namespace to isolate router from ArchC
 using user::mc723_router;
 
 /// Constructor
-mc723_router::mc723_router( sc_module_name module_name , int k ) :
+mc723_router::mc723_router( sc_module_name module_name , unsigned int k ) :
   sc_module( module_name ),
   target_export("iport"),
-  DM_port("DM_port", 5242880U)
+  DM_port("DM_port", k)
 {
     /// Binds target_export to the router
     target_export( *this );

@@ -1,34 +1,3 @@
-/**
- * @file      mc723_locker.h
- * @author    Bruno de Carvalho Albertini
- *
- * @author    The ArchC Team
- *            http://www.archc.org/
- *
- *            Computer Systems Laboratory (LSC)
- *            IC-UNICAMP
- *            http://www.lsc.ic.unicamp.br/
- *
- * @version   0.1
- * @date      Sun, 02 Apr 2006 08:07:46 -0200
- *
- * @brief     Defines a ac_tlm memory.
- *
- * @attention Copyright (C) 2002-2005 --- The ArchC Team
- *
- *   This library is free software; you can redistribute it and/or
- *   modify it under the terms of the GNU Lesser General Public
- *   License as published by the Free Software Foundation; either
- *   version 2.1 of the License, or (at your option) any later version.
- *
- *   This library is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *   Lesser General Public License for more details.
- *
- *
- */
-
 //////////////////////////////////////////////////////////////////////////////
 
 #ifndef MC723_LOCKER_H_
@@ -49,13 +18,11 @@ using tlm::tlm_transport_if;
 
 //////////////////////////////////////////////////////////////////////////////
 
-//#define DEBUG
-
-/// Namespace to isolate memory from ArchC
+/// Namespace to isolate locker from ArchC
 namespace user
 {
 
-/// A TLM memory
+/// A TLM locker
 class mc723_locker :
   public sc_module,
   public ac_tlm_transport_if // Using ArchC TLM protocol
@@ -76,11 +43,15 @@ public:
     ac_tlm_rsp response;
 
     switch( request.type ) {
+
+    /* Consulta (lê) e adquire (se possível) a trava */
     case READ: 
       response.status = SUCCESS;
       response.data = mutex;
       mutex = 1;
       break;
+
+    /* Escreve na trava (libera ou trava) */
     case WRITE:
       response.status = SUCCESS;
       mutex = request.data;
@@ -102,7 +73,7 @@ public:
   ~mc723_locker();
 
 private:
-  uint8_t mutex;
+  uint8_t mutex; /* Variável para o mutex (trava) */
 };
 };
 

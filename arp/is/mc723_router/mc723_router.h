@@ -10,7 +10,6 @@
 #include <systemc>
 // ArchC includes
 #include "ac_tlm_protocol.H"
-
 #include "ac_tlm_port.H"
 
 //////////////////////////////////////////////////////////////////////////////
@@ -20,6 +19,7 @@ using tlm::tlm_transport_if;
 
 //////////////////////////////////////////////////////////////////////////////
 
+/// Namespace to isolate router from ArchC
 namespace user
 {
 
@@ -35,7 +35,7 @@ public:
   ac_tlm_port DM_port;
 
     // Constructor
-  mc723_router ( sc_module_name module_name , int k = 5242880 );
+  mc723_router ( sc_module_name module_name , unsigned int k = 5242880U ); /* k = 5M */
 
     // Destructor
   ~mc723_router();
