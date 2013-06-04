@@ -10,6 +10,7 @@
 #include <systemc>
 // ArchC includes
 #include "ac_tlm_protocol.H"
+#include "../utility_belt/utility_belt.h"
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -42,13 +43,23 @@ public:
 
     ac_tlm_rsp response;
 
+    union mutex_values {
+        int i;
+        unsigned char c[4];
+    } mutex_value;
+
+    mutex_value.i = 1;//16777216
+//printf("antes: %d\n", mutex_value.i);
+    exchange_endian(mutex_value.c);
+//printf("depois: %d\n", mutex_value.i);
+
     switch( request.type ) {
 
     /* Consulta (lê) e adquire (se possível) a trava */
     case READ: 
       response.status = SUCCESS;
       response.data = mutex;
-      mutex = 16777216;
+      mutex = mutex_value.i;
       break;
 
     /* Escreve na trava (libera ou trava) */
