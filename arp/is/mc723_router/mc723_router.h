@@ -43,7 +43,7 @@ public:
   
   ac_tlm_rsp transport( const ac_tlm_req &request ) {
     // response mem
-    if(request.addr < 5242880)
+    if(request.addr < 5242884)
       return mem_port->transport(request);
     return lock_port->transport(request);
   }

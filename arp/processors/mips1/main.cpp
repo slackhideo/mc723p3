@@ -12,52 +12,30 @@
  * http://www.lsc.ic.unicamp.br                       *
  ******************************************************/
  
-// Rodolfo editou aqui
-//
+
 const char *project_name="mips1";
 const char *project_file="mips1.ac";
-const char *archc_version="2.0beta1";
-const char *archc_options="-abi -dy ";
+const char *archc_version="2.2";
+const char *archc_options="-abi ";
 
+#include  <iostream>
 #include  <systemc.h>
-#include  <string.h>
+#include  "ac_stats_base.H"
 #include  "mips1.H"
-#include  "ac_tlm_mem.h"
-#include  "mc723_router.h"
-#include  "mc723_locker.h"
 
-using user::ac_tlm_mem;
-using user::mc723_router;
-using user::mc723_locker;
+
 
 int sc_main(int ac, char *av[])
 {
 
   //!  ISA simulator
   mips1 mips1_proc1("mips1");
-  mips1 mips1_proc2("mips2");
-  ac_tlm_mem mem("mem");
-  mc723_router router("router");
-  mc723_locker locker("locker");
 
 #ifdef AC_DEBUG
   ac_trace("mips1_proc1.trace");
 #endif 
 
-  mips1_proc1.DM_port(router.target_export);
-  mips1_proc2.DM_port(router.target_export);
-
-  router.mem_port (mem.target_export);
-  router.lock_port (locker.target_export);
-
-  char **av_bkp = (char**) malloc(ac*sizeof(char*));
-  for(int i; i < ac; i++) av_bkp[i] = (char*) malloc(sizeof(av[i]));
-
-  for(int i; i < ac; i++) strcpy(av_bkp[i],av[i]);
-  mips1_proc1.init(ac, av_bkp);
-  for(int i; i < ac; i++) strcpy(av_bkp[i],av[i]);
-  mips1_proc2.init(ac, av_bkp);
-
+  mips1_proc1.init(ac, av);
   cerr << endl;
 
   sc_start();
@@ -66,8 +44,7 @@ int sc_main(int ac, char *av[])
   cerr << endl;
 
 #ifdef AC_STATS
-  mips1_proc1.ac_sim_stats.time = sc_simulation_time();
-  mips1_proc1.ac_sim_stats.print();
+  ac_stats_base::print_all_stats(std::cerr);
 #endif 
 
 #ifdef AC_DEBUG
