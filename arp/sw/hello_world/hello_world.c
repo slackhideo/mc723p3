@@ -7,11 +7,11 @@ int main(int argc, char *argv[]){
 
     int *test;
     test = (int*) 5242880;
-    printf("%d\n",*test);
-    printf("%d\n",*test);
-    *test = 10;
-    printf("%d\n",*test);
-    printf("%d\n",*test);
+    printf("Mutex: %d\n",*test); // aberto, leitura e lock
+    printf("Mutex: %d\n",*test); // fechado
+    *test = 0;                   // libera
+    printf("%d\n",*test);        // aberto, leitura e lock
+    printf("%d\n",*test);        // fechado
 
   exit(0); // To avoid cross-compiler exit routine
   return 0; // Never executed, just for compatibility
