@@ -37,7 +37,8 @@ using user::mc723_router;
 mc723_router::mc723_router( sc_module_name module_name , unsigned int k ) :
   sc_module( module_name ),
   target_export("iport"),
-  DM_port("DM_port", k)
+  mem_port("mem", k),
+  lock_port("lock", 1)
 {
     /// Binds target_export to the router
     target_export( *this );

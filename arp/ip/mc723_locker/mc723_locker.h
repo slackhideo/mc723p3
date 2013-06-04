@@ -48,7 +48,7 @@ public:
     case READ: 
       response.status = SUCCESS;
       response.data = mutex;
-      mutex = 1;
+      mutex = 16777216;
       break;
 
     /* Escreve na trava (libera ou trava) */
@@ -56,6 +56,7 @@ public:
       response.status = SUCCESS;
       mutex = request.data;
       break;
+
     default :
       response.status = ERROR;
       break;
@@ -73,7 +74,7 @@ public:
   ~mc723_locker();
 
 private:
-  uint8_t mutex; /* Variável para o mutex (trava) */
+  int mutex; /* Variável para o mutex (trava) */
 };
 };
 
