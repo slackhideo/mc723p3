@@ -51,11 +51,11 @@ int sc_main(int ac, char *av[])
   router.lock_port (locker.target_export);
 
   char **av_bkp = (char**) malloc(ac*sizeof(char*));
-  for(int i; i < ac; i++) av_bkp[i] = (char*) malloc(sizeof(av[i]));
+  for(int i = 0; i < ac; i++) av_bkp[i] = (char*) malloc(sizeof(av[i]));
 
-  for(int i; i < ac; i++) strcpy(av_bkp[i],av[i]);
+  for(int i = 0; i < ac; i++) strcpy(av_bkp[i],av[i]);
   mips1_proc1.init(ac, av_bkp);
-  for(int i; i < ac; i++) strcpy(av_bkp[i],av[i]);
+  for(int i = 0; i < ac; i++) strcpy(av_bkp[i],av[i]);
   mips1_proc2.init(ac, av_bkp);
 
   cerr << endl;

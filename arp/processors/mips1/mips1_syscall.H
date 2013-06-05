@@ -1,1 +1,0 @@
-mips1_syscall.H.tmpl
