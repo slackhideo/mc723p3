@@ -23,7 +23,7 @@ using tlm::tlm_transport_if;
 namespace user
 {
 
-// A TLM router!
+// A router!
   class mc723_router :
   public sc_module,
   public ac_tlm_transport_if

@@ -1,5 +1,5 @@
 # ####################################################
-# TLM memory with TLM interface (ArchC 2x compliant)
+# Router with TLM interface (ArchC 2x compliant)
 # ####################################################
 
 TARGET=mc723_router

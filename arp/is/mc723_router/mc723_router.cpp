@@ -1,12 +1,10 @@
 /**
  * @file      mc723_router.cpp
- * @author    Grupo 45 - MC723 - 1s2013
+ * @author    Grupo 40 - MC723 - 1s2013
  *
  * @version   0.2
  *
- * @brief     Implements a ac_tlm router.
- *
- * @attention Copyright (C) 2002-2005 --- The ArchC Team
+ * @brief     Implements a router.
  *
  *   This library is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU Lesser General Public
@@ -17,7 +15,6 @@
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *   Lesser General Public License for more details.
- *
  *
  */
 
