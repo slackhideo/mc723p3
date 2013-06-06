@@ -11,9 +11,9 @@
  * IC-UNICAMP                                         *
  * http://www.lsc.ic.unicamp.br                       *
  ******************************************************/
+
+// Grupo 40
  
-// Rodolfo editou aqui
-//
 const char *project_name="mips1";
 const char *project_file="mips1.ac";
 const char *archc_version="2.0beta1";
@@ -36,16 +36,20 @@ int sc_main(int ac, char *av[])
   //!  ISA simulator
   mips1 mips1_proc1("mips1");
   mips1 mips1_proc2("mips2");
+  mips1 mips1_proc3("mips3");
   ac_tlm_mem mem("mem");
   mc723_router router("router");
   mc723_locker locker("locker");
 
 #ifdef AC_DEBUG
   ac_trace("mips1_proc1.trace");
+  ac_trace("mips1_proc2.trace");
+  ac_trace("mips1_proc3.trace");
 #endif 
 
   mips1_proc1.DM_port(router.target_export);
   mips1_proc2.DM_port(router.target_export);
+  mips1_proc3.DM_port(router.target_export);
 
   router.mem_port (mem.target_export);
   router.lock_port (locker.target_export);
@@ -57,6 +61,8 @@ int sc_main(int ac, char *av[])
   mips1_proc1.init(ac, av_bkp);
   for(int i = 0; i < ac; i++) strcpy(av_bkp[i],av[i]);
   mips1_proc2.init(ac, av_bkp);
+  for(int i = 0; i < ac; i++) strcpy(av_bkp[i],av[i]);
+  mips1_proc3.init(ac, av_bkp);
 
   cerr << endl;
 
@@ -64,15 +70,25 @@ int sc_main(int ac, char *av[])
 
   mips1_proc1.PrintStat();
   cerr << endl;
+  mips1_proc2.PrintStat();
+  cerr << endl;
+  mips1_proc3.PrintStat();
+  cerr << endl;
 
 #ifdef AC_STATS
   mips1_proc1.ac_sim_stats.time = sc_simulation_time();
   mips1_proc1.ac_sim_stats.print();
+  mips1_proc2.ac_sim_stats.time = sc_simulation_time();
+  mips1_proc2.ac_sim_stats.print();
+  mips1_proc3.ac_sim_stats.time = sc_simulation_time();
+  mips1_proc3.ac_sim_stats.print();
 #endif 
 
 #ifdef AC_DEBUG
   ac_close_trace();
 #endif 
 
-  return mips1_proc1.ac_exit_status;
+  // TO DO: make error!
+  // return mips1_proc1.ac_exit_status;
+  return 0;
 }

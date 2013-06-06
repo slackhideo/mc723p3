@@ -25,7 +25,10 @@ struct thread_info {    /* Used as argument */
 };
 
 double f(double x){
-	return log10(x);
+	double ret;
+	//ret = x*x-(4*x)+5;
+	ret = log10(x);
+	return ret;
 }
 
 double Trap(double left_endpt, double right_endpt, int trap_count, double base_len) {
@@ -38,15 +41,15 @@ double Trap(double left_endpt, double right_endpt, int trap_count, double base_l
 		x=left_endpt + i*base_len;
 		estimate += f(x);
 	}
-
 	estimate = estimate*base_len;
-	printf("%f\n",estimate);
+
 	return estimate;
 
 } /* Trap */
 
 void *thread_start(void* arg){
-	double local_n, local_int;
+  int local_n;
+  double local_int;
 	double local_a= 0.0, local_b= 0.0;
 	struct thread_info *tinfo = (struct thread_info *) arg;
 
@@ -56,8 +59,8 @@ void *thread_start(void* arg){
 	local_a = a+tinfo->thread_num*local_n*h;
 	local_b = local_a+local_n*h;
 	local_int = Trap(local_a,local_b,local_n,h);
-
-	pthread_mutex_lock(&trava);	
+	
+	pthread_mutex_lock(&trava);
 	total_int += local_int;
 	pthread_mutex_unlock(&trava);
 }
@@ -66,11 +69,11 @@ int main(int argc, char* argv[]) {
 	int rank, s;
 	struct timeval start, end;
 	struct thread_info *tinfo;
-	
 
-	
-	thread_count = strtol(argv[1], NULL, 10); /* Numero de threads a serem iniciadas */
+	thread_count = strtol(argv[1], NULL, 10); /* Numero de threads a serem iniciadas */	
 	tinfo = calloc(thread_count, sizeof(struct thread_info));
+	
+      
 	
 	printf("Digite o numero de subintervalos:\n");
 	scanf("%d", &n);
