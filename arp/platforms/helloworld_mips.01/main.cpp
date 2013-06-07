@@ -19,12 +19,12 @@ const char *project_file="mips1.ac";
 const char *archc_version="2.0beta1";
 const char *archc_options="-abi -dy ";
 
-#include  <systemc.h>
-#include  <string.h>
-#include  "mips1.H"
-#include  "ac_tlm_mem.h"
-#include  "mc723_router.h"
-#include  "mc723_locker.h"
+#include <systemc.h>
+#include <string.h>
+#include "mips1.H"
+#include "ac_tlm_mem.h"
+#include "mc723_router.h"
+#include "mc723_locker.h"
 
 using user::ac_tlm_mem;
 using user::mc723_router;
@@ -32,12 +32,15 @@ using user::mc723_locker;
 
 int sc_main(int ac, char *av[])
 {
+  int exit_status;
 
   //!  ISA simulator
   mips1 mips1_proc1("mips1");
   mips1 mips1_proc2("mips2");
   mips1 mips1_proc3("mips3");
+
   ac_tlm_mem mem("mem");
+
   mc723_router router("router");
   mc723_locker locker("locker");
 
@@ -47,31 +50,42 @@ int sc_main(int ac, char *av[])
   ac_trace("mips1_proc3.trace");
 #endif 
 
+  /* Connection between processors and router */
   mips1_proc1.DM_port(router.target_export);
   mips1_proc2.DM_port(router.target_export);
   mips1_proc3.DM_port(router.target_export);
 
+  /* Connection between router and memory */
   router.mem_port (mem.target_export);
+
+  /* Connection between router and lock device */
   router.lock_port (locker.target_export);
 
-  char **av_bkp = (char**) malloc(ac*sizeof(char*));
-  for(int i = 0; i < ac; i++) av_bkp[i] = (char*) malloc(sizeof(av[i]));
+  char **av_bkp = (char **)malloc(ac*sizeof(char *));
+  for(int i = 0; i < ac; i++)
+      av_bkp[i] = (char *)malloc(strlen(av[i])*sizeof(char));
 
-  for(int i = 0; i < ac; i++) strcpy(av_bkp[i],av[i]);
+  /* Processors initialisation */
+  for(int i = 0; i < ac; i++) strcpy(av_bkp[i], av[i]);
   mips1_proc1.init(ac, av_bkp);
-  for(int i = 0; i < ac; i++) strcpy(av_bkp[i],av[i]);
+  for(int i = 0; i < ac; i++) strcpy(av_bkp[i], av[i]);
   mips1_proc2.init(ac, av_bkp);
-  for(int i = 0; i < ac; i++) strcpy(av_bkp[i],av[i]);
+  for(int i = 0; i < ac; i++) strcpy(av_bkp[i], av[i]);
   mips1_proc3.init(ac, av_bkp);
 
   cerr << endl;
 
   sc_start();
 
+  cerr << "Processor 1:" << endl;
   mips1_proc1.PrintStat();
   cerr << endl;
+
+  cerr << "Processor 2:" << endl;
   mips1_proc2.PrintStat();
   cerr << endl;
+
+  cerr << "Processor 3:" << endl;
   mips1_proc3.PrintStat();
   cerr << endl;
 
@@ -88,7 +102,8 @@ int sc_main(int ac, char *av[])
   ac_close_trace();
 #endif 
 
-  // TO DO: make error!
-  // return mips1_proc1.ac_exit_status;
-  return 0;
+  exit_status = mips1_proc1.ac_exit_status | mips1_proc2.ac_exit_status |
+      mips1_proc3.ac_exit_status;
+
+  return exit_status;
 }
