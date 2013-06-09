@@ -12,17 +12,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+#include <sys/time.h>
 
 /// mutex macros
 #define LOCK while(*lockd)
 #define UNLOCK *lockd=0
-#define PROC_NUM 3
+#define PROC_NUM 8
+
+typedef struct timeval time;
 
 
 /// volatile variables
 volatile int done = 0;
 volatile int proc = 0;
+volatile int running_proc = 0;
 volatile int    n = 1000;
 volatile float a = 0.0;
 volatile float b = 0.0;
@@ -32,11 +35,11 @@ volatile int *lockd = (int*) 5242884;
 
 
 /// function to be evaluated
-/*
-float f(float x){
+
+float f2(float x){
     return (float) log10((double)x);
 }
-*/
+
 
 // requests to the function unit function log10(x)
 float f(float x) {
@@ -85,10 +88,10 @@ void proc_run(int proc_id){
   proc_b = proc_a + proc_n * h;
 
   /// DEBUG
-  LOCK;
-  printf("proc_id: %d\t proc_n: %d\nh: %lf\n",proc_id,proc_n, h);
-  printf("proc_a: %lf\t proc_b: %lf\n",proc_a,proc_b);
-  UNLOCK;
+  //LOCK;
+  //printf("proc_id: %d\t proc_n: %d\nh: %lf\n",proc_id,proc_n, h);
+  //printf("proc_a: %lf\t proc_b: %lf\n",proc_a,proc_b);
+  //UNLOCK;
 
   /// approximation
   proc_result = trap(proc_a,proc_b,proc_n,h);
@@ -104,11 +107,13 @@ void proc_run(int proc_id){
 int main() {
   int self = 0;
   int proc_id = 0;
+  time end_time, start_time;
 
   printf("Teste\n");
   
   LOCK;
   proc_id = proc++;
+  running_proc++;
   printf("Processor %d running!\n", proc_id);
   
   if(proc_id == 0){
@@ -125,18 +130,31 @@ int main() {
     
     /// interval size
     h = (b - a)/n;
+
+    gettimeofday(&start_time, NULL);
   }
   UNLOCK;
   
   /// execute
   proc_run(proc_id);
 
+  running_proc--;
+  
   /// workaround
   if(proc_id == 0){
+    // wait all processors to finish
+    while (running_proc > 0);
+
+    // stops the timer
+    gettimeofday(&end_time, NULL);
+
+    int elapsed_time = (end_time.tv_sec-start_time.tv_sec)*1000000 + (end_time.tv_usec-start_time.tv_usec);
+     
     while(!self){
       LOCK;
       if(done == PROC_NUM){
         printf("A estimativa foi: %e\n", result);
+        printf("O tempo de processamento foi de: %d microssegundos\n", elapsed_time);
         self = 1;
       }
       UNLOCK;
