@@ -1,4 +1,4 @@
-IP := ac_tlm_mem mc723_locker utility_belt
+IP := ac_tlm_mem mc723_locker utility_belt mc723_func_unit
 IS := mc723_router
 PROCESSOR := mips1
 SW := hello_world integral

@@ -34,6 +34,7 @@ public:
   sc_export< ac_tlm_transport_if > target_export;
   ac_tlm_port mem_port;
   ac_tlm_port lock_port;
+  ac_tlm_port func_unit_port;
   
   // Constructor
   mc723_router ( sc_module_name module_name , unsigned int k = 5242880U ); /* k = 5M */
@@ -45,7 +46,11 @@ public:
     // response mem
     if(request.addr < 5242884)
       return mem_port->transport(request);
-    return lock_port->transport(request);
+
+    if (request.addr == 5242884)
+        return lock_port->transport(request);
+
+    return func_unit_port->transport(request);
   }
 };
   

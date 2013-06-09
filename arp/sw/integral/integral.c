@@ -24,24 +24,38 @@
 volatile int done = 0;
 volatile int proc = 0;
 volatile int    n = 1000;
-volatile double a = 0.0;
-volatile double b = 0.0;
-volatile double h = 0.0;
-volatile double result = 0.0;
+volatile float a = 0.0;
+volatile float b = 0.0;
+volatile float h = 0.0;
+volatile float result = 0.0;
 volatile int *lockd = (int*) 5242884;
 
 
 /// function to be evaluated
-double f(double x){
-  return log10(x);
+/*
+float f(float x){
+    return (float) log10((double)x);
+}
+*/
+
+// requests to the function unit function log10(x)
+float f(float x) {
+    LOCK;
+    float *arg_addr = (float*) 5242888;
+    *arg_addr = x;
+
+    float *res_addr = (float*) 5242896;
+    UNLOCK;
+
+    return *res_addr;
 }
 
 
 /// trapezium rule appoximate numerical integration
-double trap(double a, double b, int n, double h) {
+float trap(float a, float b, int n, float h) {
   int i;
-  double approx = 0.0;
-  double x = 0.0;
+  float approx = 0.0;
+  float x = 0.0;
  
   /// TODO: hw area calculator!
   approx = (f(a) + f(b))/2.0;
@@ -57,9 +71,9 @@ double trap(double a, double b, int n, double h) {
 
 void proc_run(int proc_id){
   int proc_n = 0;
-  double proc_a = 0.0;
-  double proc_b = 0.0;
-  double proc_result = 0.0;
+  float proc_a = 0.0;
+  float proc_b = 0.0;
+  float proc_result = 0.0;
   
   /// this processor intervals number
   proc_n = n/PROC_NUM;
@@ -90,7 +104,9 @@ void proc_run(int proc_id){
 int main() {
   int self = 0;
   int proc_id = 0;
-    
+
+  printf("Teste\n");
+  
   LOCK;
   proc_id = proc++;
   printf("Processor %d running!\n", proc_id);
