@@ -43,13 +43,15 @@ public:
   ~mc723_router();
   
   ac_tlm_rsp transport( const ac_tlm_req &request ) {
-    // response mem
+    // To memory
     if(request.addr < 5242884)
       return mem_port->transport(request);
 
+    // To lock
     if (request.addr == 5242884)
         return lock_port->transport(request);
 
+    // To function unit
     return func_unit_port->transport(request);
   }
 };

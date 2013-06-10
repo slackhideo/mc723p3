@@ -79,9 +79,10 @@ int sc_main(int ac, char *av[])
   /* Connection between router and lock device */
   router.lock_port (locker.target_export);
 
-  /* Connection between router and unit */
+  /* Connection between router and function unit */
   router.func_unit_port (unit.target_export);
 
+  /* Creates a copy of the av parameter */
   char **av_bkp = (char **)malloc(ac*sizeof(char *));
   for(int i = 0; i < ac; i++)
       av_bkp[i] = (char *)malloc(strlen(av[i])*sizeof(char));
@@ -121,23 +122,23 @@ int sc_main(int ac, char *av[])
   cerr << endl;
 
   cerr << "Processor 4:" << endl;
-  mips1_proc3.PrintStat();
+  mips1_proc4.PrintStat();
   cerr << endl;
 
   cerr << "Processor 5:" << endl;
-  mips1_proc3.PrintStat();
+  mips1_proc5.PrintStat();
   cerr << endl;
 
   cerr << "Processor 6:" << endl;
-  mips1_proc3.PrintStat();
+  mips1_proc6.PrintStat();
   cerr << endl;
 
   cerr << "Processor 7:" << endl;
-  mips1_proc3.PrintStat();
+  mips1_proc7.PrintStat();
   cerr << endl;
 
   cerr << "Processor 8:" << endl;
-  mips1_proc3.PrintStat();
+  mips1_proc8.PrintStat();
   cerr << endl;
 
 #ifdef AC_STATS
@@ -166,7 +167,7 @@ int sc_main(int ac, char *av[])
   exit_status = mips1_proc1.ac_exit_status | mips1_proc2.ac_exit_status |
       mips1_proc3.ac_exit_status | mips1_proc4.ac_exit_status |
       mips1_proc5.ac_exit_status | mips1_proc6.ac_exit_status |
-      mips1_proc7.ac_exit_status | mips1_proc8.ac_exit_status;
+      mips1_proc7.ac_exit_status | mips1_proc7.ac_exit_status;
 
   return exit_status;
 }

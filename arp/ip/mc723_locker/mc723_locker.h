@@ -49,10 +49,8 @@ public:
         unsigned char c[4];
     } mutex_value;
 
-    mutex_value.i = 1;//16777216
-//printf("antes: %d\n", mutex_value.i);
+    mutex_value.i = 1;
     exchange_endian(mutex_value.c);
-//printf("depois: %d\n", mutex_value.i);
 
     switch( request.type ) {
 

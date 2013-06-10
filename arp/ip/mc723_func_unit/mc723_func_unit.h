@@ -23,7 +23,7 @@ using tlm::tlm_transport_if;
 #define UNIT_ARGUMENT_ADDR 5242888
 #define UNIT_RESULT_ADDR 5242896
 
-/// Namespace to isolate locker from ArchC
+/// Namespace to isolate unit from ArchC
 namespace user
 {
 
