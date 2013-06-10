@@ -127,7 +127,11 @@ run: all
 	cd platforms/$(PLATFORM); $(MAKE) run
 #------------------------------------------------------
 serial:
+	for sw in $(SW); do \
+            cd sw/$$sw; $(MAKE) serial; cd $(ARP); done
 	cd platforms/$(PLATFORM); $(MAKE) serial
 #------------------------------------------------------
 parallel:
+	for sw in $(SW); do \
+            cd sw/$$sw; $(MAKE) parallel; cd $(ARP); done
 	cd platforms/$(PLATFORM); $(MAKE) parallel

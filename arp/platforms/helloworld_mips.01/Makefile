@@ -38,7 +38,7 @@ distclean: clean
 	$(CC) $(CFLAGS) $(INC_DIR) -c $<
 #------------------------------------------------------
 serial:
-	ln -s main1.cpp main.cpp
+	ln -sf main1.cpp main.cpp
 #------------------------------------------------------
 parallel:
-	ln -s main8.cpp main.cpp
+	ln -sf main8.cpp main.cpp
