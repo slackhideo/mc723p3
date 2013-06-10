@@ -1,165 +1,101 @@
 /* 
- * @file     its_a_trap.c
- * @author   Grupo 40 & Victor Accarini D'Lima (105753)
+ * @file     serial_killer.c
+ * @author   Victor Accarini D'Lima (105753)
  * 
- * @version  2.0
+ * @version  1.1
  *
- * @brief    Implements a Trapezium Rule Approximate Numerical Integration in
- *           a Multi-Processor MIPS simulator
+ * @brief    Implements a Trapezium Rule Approximate Numerical Integration
  * 
  */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <sys/time.h>
+#include <math.h>
 
 /// mutex macros
 #define LOCK while(*lockd)
 #define UNLOCK *lockd=0
 #define PROC_NUM 8
 
+
 typedef struct timeval time;
 
+// processor identification
+volatile int proc_id = 0;
 
-/// volatile variables
-volatile int done = 0;
-volatile int proc = 0;
-volatile int running_proc = 0;
-volatile int    n = 1000;
-volatile float a = 0.0;
-volatile float b = 0.0;
-volatile float h = 0.0;
-volatile float result = 0.0;
+// lock address
 volatile int *lockd = (int*) 5242884;
 
-
 /// function to be evaluated
-
 float f2(float x){
-    return (float) log10((double)x);
+    return log10((double)x);
 }
 
-
-// requests to the function unit function log10(x)
 float f(float x) {
-    LOCK;
     float *arg_addr = (float*) 5242888;
     *arg_addr = x;
 
     float *res_addr = (float*) 5242896;
-    UNLOCK;
 
     return *res_addr;
 }
 
-
 /// trapezium rule appoximate numerical integration
-float trap(float a, float b, int n, float h) {
+float trap(float left_endpt, float right_endpt, int trap_count, float base_len){
+  float estimate = 0;
+  float x = 0;
   int i;
-  float approx = 0.0;
-  float x = 0.0;
- 
-  /// TODO: hw area calculator!
-  approx = (f(a) + f(b))/2.0;
-  for(i = 1; i < n; i++) {
-    x = a + i*h;
-    approx += f(x);
+  
+  estimate = (f(left_endpt) + f(right_endpt))/2.0;
+  for(i = 1; i < trap_count; i++){
+    x = left_endpt + i*base_len;
+    estimate += f(x);
   }
+  estimate = estimate*base_len;
   
-  approx = approx*h;
-  return approx; 
+  return estimate;
 }
 
-
-void proc_run(int proc_id){
-  int proc_n = 0;
-  float proc_a = 0.0;
-  float proc_b = 0.0;
-  float proc_result = 0.0;
-  
-  /// this processor intervals number
-  proc_n = n/PROC_NUM;
-  if(proc_id < n%PROC_NUM)
-    proc_n++;
-
-  /// this processor first and last interval points
-  proc_a = a + proc_id * proc_n * h;
-  proc_b = proc_a + proc_n * h;
-
-  /// DEBUG
-  //LOCK;
-  //printf("proc_id: %d\t proc_n: %d\nh: %lf\n",proc_id,proc_n, h);
-  //printf("proc_a: %lf\t proc_b: %lf\n",proc_a,proc_b);
-  //UNLOCK;
-
-  /// approximation
-  proc_result = trap(proc_a,proc_b,proc_n,h);
-
-  /// results
-  LOCK;
-  result += proc_result;
-  done++;
-  UNLOCK;
-}
-
-
+/// serial main
 int main() {
-  int self = 0;
-  int proc_id = 0;
-  time end_time, start_time;
+  int n;
+  float h, a, b, t, total;
+  time end, start;
 
-  printf("Teste\n");
-  
   LOCK;
-  proc_id = proc++;
-  running_proc++;
-  printf("Processor %d running!\n", proc_id);
-  
-  if(proc_id == 0){
-    /// interval count
-    printf("Digite o numero de subintervalos:\n");
-    scanf("%d", &n);
-    
-    /// interval start
-    printf("Digite o inicio e o final do intervalo:\n");
-    scanf("%lf", &a);
-    
-    /// interval end
-    scanf("%lf", &b);
-    
-    /// interval size
-    h = (b - a)/n;
 
-    gettimeofday(&start_time, NULL);
+  if (proc_id == 0) {
+      printf("Digite o numero de subintervalos:\n");
+      /// interval count
+      scanf("%d", &n);
+
+      printf("Digite o inicio e o final do intervalo:\n");
+      /// interval start
+      scanf("%lf", &a);
+      /// interval end
+      scanf("%lf", &b);
+      
+      /// timer init
+      gettimeofday(&start, NULL);
+
+      /// interval size
+      h=(b-a)/n;
+      total = trap(a,b,n,h);
+  
+      /// timer finish
+      gettimeofday(&end, NULL);
+      t = ((end.tv_sec  - start.tv_sec) * 1000000u + end.tv_usec - start.tv_usec) / 1.e6;
+  
+      printf("A estimativa foi: %.15e\n",total);
+      printf("Tempo: %lf\n", t);
+
+      proc_id++;
   }
+
   UNLOCK;
+ 
   
-  /// execute
-  proc_run(proc_id);
-
-  running_proc--;
-  
-  /// workaround
-  if(proc_id == 0){
-    // wait all processors to finish
-    while (running_proc > 0);
-
-    // stops the timer
-    gettimeofday(&end_time, NULL);
-
-    int elapsed_time = (end_time.tv_sec-start_time.tv_sec)*1000000 + (end_time.tv_usec-start_time.tv_usec);
-     
-    while(!self){
-      LOCK;
-      if(done == PROC_NUM){
-        printf("A estimativa foi: %e\n", result);
-        printf("O tempo de processamento foi de: %d microssegundos\n", elapsed_time);
-        self = 1;
-      }
-      UNLOCK;
-    }
-  }
   
   return 0;
 }
