@@ -38,13 +38,13 @@ int sc_main(int ac, char *av[])
 
   //!  ISA simulator
   mips1 mips1_proc1("mips1");
-  mips1 mips1_proc2("mips2");
-  mips1 mips1_proc3("mips3");
-  mips1 mips1_proc4("mips4");
-  mips1 mips1_proc5("mips5");
-  mips1 mips1_proc6("mips6");
-  mips1 mips1_proc7("mips7");
-  mips1 mips1_proc8("mips8");
+  //  mips1 mips1_proc2("mips2");
+  //  mips1 mips1_proc3("mips3");
+  //  mips1 mips1_proc4("mips4");
+  //  mips1 mips1_proc5("mips5");
+  //  mips1 mips1_proc6("mips6");
+  //  mips1 mips1_proc7("mips7");
+  //  mips1 mips1_proc8("mips8");
   
   ac_tlm_mem mem("mem");
 
@@ -54,24 +54,24 @@ int sc_main(int ac, char *av[])
 
 #ifdef AC_DEBUG
   ac_trace("mips1_proc1.trace");
-  ac_trace("mips1_proc2.trace");
-  ac_trace("mips1_proc3.trace");
-  ac_trace("mips1_proc4.trace");
-  ac_trace("mips1_proc5.trace");
-  ac_trace("mips1_proc6.trace");
-  ac_trace("mips1_proc7.trace");
-  ac_trace("mips1_proc8.trace");
+  //  ac_trace("mips1_proc2.trace");
+  //ac_trace("mips1_proc3.trace");
+  //ac_trace("mips1_proc4.trace");
+  //  ac_trace("mips1_proc5.trace");
+  //  ac_trace("mips1_proc6.trace");
+  //  ac_trace("mips1_proc7.trace");
+  //  ac_trace("mips1_proc8.trace");
 #endif 
 
   /* Connection between processors and router */
   mips1_proc1.DM_port(router.target_export);
-  mips1_proc2.DM_port(router.target_export);
-  mips1_proc3.DM_port(router.target_export);
-  mips1_proc4.DM_port(router.target_export);
-  mips1_proc5.DM_port(router.target_export);
-  mips1_proc6.DM_port(router.target_export);
-  mips1_proc7.DM_port(router.target_export);
-  mips1_proc8.DM_port(router.target_export);
+  //  mips1_proc2.DM_port(router.target_export);
+  //  mips1_proc3.DM_port(router.target_export);
+  //  mips1_proc4.DM_port(router.target_export);
+  //  mips1_proc5.DM_port(router.target_export);
+  //  mips1_proc6.DM_port(router.target_export);
+  //  mips1_proc7.DM_port(router.target_export);
+  //  mips1_proc8.DM_port(router.target_export);
 
   /* Connection between router and memory */
   router.mem_port (mem.target_export);
@@ -90,6 +90,7 @@ int sc_main(int ac, char *av[])
   /* Processors initialisation */
   for(int i = 0; i < ac; i++) strcpy(av_bkp[i], av[i]);
   mips1_proc1.init(ac, av_bkp);
+  /*
   for(int i = 0; i < ac; i++) strcpy(av_bkp[i], av[i]);
   mips1_proc2.init(ac, av_bkp);
   for(int i = 0; i < ac; i++) strcpy(av_bkp[i], av[i]);
@@ -104,7 +105,7 @@ int sc_main(int ac, char *av[])
   mips1_proc7.init(ac, av_bkp);
   for(int i = 0; i < ac; i++) strcpy(av_bkp[i], av[i]);
   mips1_proc8.init(ac, av_bkp);
-
+  */
   cerr << endl;
 
   sc_start();
@@ -112,7 +113,7 @@ int sc_main(int ac, char *av[])
   cerr << "Processor 1:" << endl;
   mips1_proc1.PrintStat();
   cerr << endl;
-
+  /*
   cerr << "Processor 2:" << endl;
   mips1_proc2.PrintStat();
   cerr << endl;
@@ -140,10 +141,11 @@ int sc_main(int ac, char *av[])
   cerr << "Processor 8:" << endl;
   mips1_proc8.PrintStat();
   cerr << endl;
-
+  */
 #ifdef AC_STATS
   mips1_proc1.ac_sim_stats.time = sc_simulation_time();
   mips1_proc1.ac_sim_stats.print();
+  /*
   mips1_proc2.ac_sim_stats.time = sc_simulation_time();
   mips1_proc2.ac_sim_stats.print();
   mips1_proc3.ac_sim_stats.time = sc_simulation_time();
@@ -158,16 +160,17 @@ int sc_main(int ac, char *av[])
   mips1_proc7.ac_sim_stats.print();
   mips1_proc8.ac_sim_stats.time = sc_simulation_time();
   mips1_proc8.ac_sim_stats.print();
+  */
 #endif 
 
 #ifdef AC_DEBUG
   ac_close_trace();
 #endif 
 
-  exit_status = mips1_proc1.ac_exit_status | mips1_proc2.ac_exit_status |
-      mips1_proc3.ac_exit_status | mips1_proc4.ac_exit_status |
-      mips1_proc5.ac_exit_status | mips1_proc6.ac_exit_status |
-      mips1_proc7.ac_exit_status | mips1_proc7.ac_exit_status;
+  exit_status = mips1_proc1.ac_exit_status;// | mips1_proc2.ac_exit_status |
+  //      mips1_proc3.ac_exit_status | mips1_proc4.ac_exit_status |
+  //      mips1_proc5.ac_exit_status | mips1_proc6.ac_exit_status |
+  //      mips1_proc7.ac_exit_status | mips1_proc7.ac_exit_status;
 
   return exit_status;
 }

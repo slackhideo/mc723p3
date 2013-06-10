@@ -28,11 +28,11 @@ volatile int proc_id = 0;
 volatile int *lockd = (int*) 5242884;
 
 /// function to be evaluated
-float f2(float x){
+float f(float x){
     return log10((double)x);
 }
 
-float f(float x) {
+float f2(float x) {
     float *arg_addr = (float*) 5242888;
     *arg_addr = x;
 
@@ -61,41 +61,30 @@ float trap(float left_endpt, float right_endpt, int trap_count, float base_len){
 int main() {
   int n;
   float h, a, b, t, total;
-  time end, start;
 
   LOCK;
-
-  if (proc_id == 0) {
-      printf("Digite o numero de subintervalos:\n");
-      /// interval count
-      scanf("%d", &n);
-
-      printf("Digite o inicio e o final do intervalo:\n");
-      /// interval start
-      scanf("%lf", &a);
-      /// interval end
-      scanf("%lf", &b);
-      
-      /// timer init
-      gettimeofday(&start, NULL);
-
-      /// interval size
-      h=(b-a)/n;
-      total = trap(a,b,n,h);
-  
-      /// timer finish
-      gettimeofday(&end, NULL);
-      t = ((end.tv_sec  - start.tv_sec) * 1000000u + end.tv_usec - start.tv_usec) / 1.e6;
-  
-      printf("A estimativa foi: %.15e\n",total);
-      printf("Tempo: %lf\n", t);
-
-      proc_id++;
-  }
-
+  proc_id++;
   UNLOCK;
- 
+
+  LOCK;
+  if (proc_id == 1){
+  printf("Digite o numero de subintervalos:\n");
+  /// interval count
+  scanf("%d", &n);
+
+  printf("Digite o inicio e o final do intervalo:\n");
+  /// interval start
+  scanf("%f", &a);
+  /// interval end
+  scanf("%f", &b);
   
+  /// interval size
+  h=(b-a)/n;
+  total = trap(a,b,n,h);
+  
+  printf("A estimativa foi: %.15e\n",total);
+  }
+  proc_id++;
   
   return 0;
 }

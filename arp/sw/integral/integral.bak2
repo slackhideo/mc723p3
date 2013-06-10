@@ -18,6 +18,7 @@
 #define LOCK while(*lockd)
 #define UNLOCK *lockd=0
 #define PROC_NUM 8
+//#define PERIFERICO
 
 typedef struct timeval time;
 
@@ -26,7 +27,7 @@ typedef struct timeval time;
 volatile int done = 0;
 volatile int proc = 0;
 volatile int running_proc = 0;
-volatile int    n = 1000;
+volatile int   n = 1000;
 volatile float a = 0.0;
 volatile float b = 0.0;
 volatile float h = 0.0;
@@ -36,34 +37,39 @@ volatile int *lockd = (int*) 5242884;
 
 /// function to be evaluated
 
-float f2(float x){
+#ifndef PERIFERICO
+float f(float x){
     return (float) log10((double)x);
 }
+#endif
 
 
+#ifdef PERIFERICO
 // requests to the function unit function log10(x)
 float f(float x) {
     LOCK;
     float *arg_addr = (float*) 5242888;
     *arg_addr = x;
 
-    float *res_addr = (float*) 5242896;
+    float res_local, *res_addr = (float*) 5242896;
+    res_local = *res_addr;
     UNLOCK;
 
-    return *res_addr;
+    return res_local;
 }
+#endif
 
 
 /// trapezium rule appoximate numerical integration
-float trap(float a, float b, int n, float h) {
+float trap(float l, float r, int n, float h) {
   int i;
   float approx = 0.0;
   float x = 0.0;
  
   /// TODO: hw area calculator!
-  approx = (f(a) + f(b))/2.0;
+  approx = (f(l) + f(r))/2.0;
   for(i = 1; i < n; i++) {
-    x = a + i*h;
+    x = l + i*h;
     approx += f(x);
   }
   
@@ -88,10 +94,9 @@ void proc_run(int proc_id){
   proc_b = proc_a + proc_n * h;
 
   /// DEBUG
-  //LOCK;
-  //printf("proc_id: %d\t proc_n: %d\nh: %lf\n",proc_id,proc_n, h);
-  //printf("proc_a: %lf\t proc_b: %lf\n",proc_a,proc_b);
-  //UNLOCK;
+  LOCK;
+  printf("proc_id: %d\t proc_n: %d proc_a: %f, proc_b: %f\n",proc_id,proc_n, proc_a,proc_b);
+  UNLOCK;
 
   /// approximation
   proc_result = trap(proc_a,proc_b,proc_n,h);
@@ -107,10 +112,7 @@ void proc_run(int proc_id){
 int main() {
   int self = 0;
   int proc_id = 0;
-  time end_time, start_time;
 
-  printf("Teste\n");
-  
   LOCK;
   proc_id = proc++;
   running_proc++;
@@ -123,15 +125,16 @@ int main() {
     
     /// interval start
     printf("Digite o inicio e o final do intervalo:\n");
-    scanf("%lf", &a);
+    scanf("%f", &a);
     
     /// interval end
-    scanf("%lf", &b);
+    scanf("%f", &b);
     
     /// interval size
     h = (b - a)/n;
 
-    gettimeofday(&start_time, NULL);
+    printf("h: %f\n\n", h);
+
   }
   UNLOCK;
   
@@ -145,16 +148,10 @@ int main() {
     // wait all processors to finish
     while (running_proc > 0);
 
-    // stops the timer
-    gettimeofday(&end_time, NULL);
-
-    int elapsed_time = (end_time.tv_sec-start_time.tv_sec)*1000000 + (end_time.tv_usec-start_time.tv_usec);
-     
     while(!self){
       LOCK;
       if(done == PROC_NUM){
         printf("A estimativa foi: %e\n", result);
-        printf("O tempo de processamento foi de: %d microssegundos\n", elapsed_time);
         self = 1;
       }
       UNLOCK;
