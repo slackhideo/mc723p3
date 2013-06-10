@@ -125,3 +125,9 @@ distclean:
 run: all
 	cd $(ARP)
 	cd platforms/$(PLATFORM); $(MAKE) run
+#------------------------------------------------------
+serial:
+	cd platforms/$(PLATFORM); $(MAKE) serial
+#------------------------------------------------------
+parallel:
+	cd platforms/$(PLATFORM); $(MAKE) parallel
