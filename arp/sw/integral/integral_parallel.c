@@ -18,7 +18,7 @@
 #define LOCK while(*lockd)
 #define UNLOCK *lockd=0
 #define PROC_NUM 8
-//#define PERIFERICO
+#define PERIFERICO
 
 typedef struct timeval time;
 
@@ -94,9 +94,9 @@ void proc_run(int proc_id){
   proc_b = proc_a + proc_n * h;
 
   /// DEBUG
-  LOCK;
-  printf("proc_id: %d\t proc_n: %d proc_a: %f, proc_b: %f\n",proc_id,proc_n, proc_a,proc_b);
-  UNLOCK;
+  //  LOCK;
+  //printf("proc_id: %d\t proc_n: %d proc_a: %f, proc_b: %f\n",proc_id,proc_n, proc_a,proc_b);
+  //UNLOCK;
 
   /// approximation
   proc_result = trap(proc_a,proc_b,proc_n,h);
@@ -133,7 +133,7 @@ int main() {
     /// interval size
     h = (b - a)/n;
 
-    printf("h: %f\n\n", h);
+    //printf("h: %f\n\n", h);
 
   }
   UNLOCK;

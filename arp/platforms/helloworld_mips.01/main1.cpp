@@ -34,7 +34,7 @@ using user::mc723_func_unit;
 
 int sc_main(int ac, char *av[])
 {
-  int exit_status;
+  int exit_status = 0;
 
   //!  ISA simulator
   mips1 mips1_proc1("mips1");
@@ -86,8 +86,6 @@ int sc_main(int ac, char *av[])
 #ifdef AC_DEBUG
   ac_close_trace();
 #endif 
-
-  exit_status = mips1_proc1.ac_exit_status;
 
   return exit_status;
 }
