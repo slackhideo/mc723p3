@@ -164,7 +164,7 @@ int sc_main(int ac, char *av[])
   ac_close_trace();
 #endif 
 
-  exit_status = mips1_proc1.ac_exit_status | mips1_proc2.ac_exit_status |
+  exit_status = mips1_proc2.ac_exit_status | mips1_proc2.ac_exit_status |
       mips1_proc3.ac_exit_status | mips1_proc4.ac_exit_status |
       mips1_proc5.ac_exit_status | mips1_proc6.ac_exit_status |
       mips1_proc7.ac_exit_status | mips1_proc7.ac_exit_status;
