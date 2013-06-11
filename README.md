@@ -9,3 +9,5 @@ Projeto 3 de MC723 (primeiro semestre de 2013)
     104308 Vinícius Fernandes Dias
 
 Cálculo de aproximações de integrais utilizando ArchC (http://archc.sourceforge.net/) com oito núcleos de processadores
+
+Para rodar, execute 'make serial run' ou 'make parallel run' no diretório arp.
